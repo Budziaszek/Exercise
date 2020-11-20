@@ -54,8 +54,10 @@ class SummaryStatistics:
         res = self._get_by_key(key, filter_key, condition, data=data)
         return len(list(res) if not distinct else set(res))
 
-    def custom_operation(self, fun, key, filter_key=None, condition=None):
-        return fun(list(self._get_by_key(key, filter_key, condition)))
+    def custom_operation(self, fun, key, filter_key=None, condition=None, group_by_key=None):
+        data = self._group_by(group_by_key) if group_by_key else self.data
+        res = self._get_by_key(key, filter_key, condition, data=data)
+        return fun(list(res))
 
 
 
