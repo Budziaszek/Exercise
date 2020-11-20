@@ -21,7 +21,7 @@ def demo():
     number_of_customers = s_s.count("CustomerId", distinct=True)
     total_amount_spent = s_s.sum("SpendAmount")
     total_amount_spent_customer_1 = s_s.sum("SpendAmount", filter_key="CustomerId", condition=lambda x: x == 1)
-    mean_amount_spent = s_s.custom_operation_by_key(mean, "SpendAmount")
+    mean_amount_spent = s_s.custom_operation(mean, "SpendAmount")
     distinct_item_6_buyers = s_s.count("CustomerId", distinct=True, filter_key="ItemId", condition=lambda x: x == 6)
     customers_who_spend_once_over_50 = s_s.count("CustomerId", distinct=True, filter_key="SpendAmount",
                                                  condition=lambda x: x > 50)
