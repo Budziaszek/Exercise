@@ -19,15 +19,30 @@ class TestSummaryStatistics(unittest.TestCase):
         self.assertRaises(ValueError, self.s_s.sum, "SpendAmount", filter_key="SpendAmount", distinct=True)
         self.assertRaises(ValueError, self.s_s.sum, "SpendAmount", condition=lambda x: x > 50, distinct=True)
         self.assertEqual(sum(set([d for d in data_amounts if d > 50])),
-                         self.s_s.sum("SpendAmount",  distinct=True, filter_key="SpendAmount",
+                         self.s_s.sum("SpendAmount", distinct=True, filter_key="SpendAmount",
                                       condition=lambda x: x > 50))
         self.assertEqual(110, self.s_s.sum("SpendAmount", filter_key="CustomerId", condition=lambda x: x == 1))
         self.assertEqual(150, self.s_s.sum("SpendAmount", filter_key="CustomerId", condition=lambda x: x == 2))
 
     def test_count(self):
-        pass
+        data_customers, data_items, data_amounts = ((1, 2, 3, 1), (5, 4, 6, 6), (100, 150, 50, 10))
+        self.s_s.data = get_sample_data(data=(data_customers, data_items, data_amounts),
+                                        keys=("CustomerId", "ItemId", "SpendAmount"))
+        self.assertEqual(len(data_amounts), self.s_s.count("SpendAmount"))
+        self.assertEqual(len(data_items), self.s_s.count("ItemId"))
+        self.assertEqual(len(data_customers), self.s_s.count("CustomerId"))
+        self.assertEqual(len([d for d in data_amounts if d > 50]),
+                         self.s_s.count("SpendAmount", filter_key="SpendAmount", condition=lambda x: x > 50))
+        self.assertEqual(len(set(data_amounts)), self.s_s.count("SpendAmount", distinct=True))
+        self.assertRaises(ValueError, self.s_s.count, "SpendAmount", filter_key="SpendAmount", distinct=True)
+        self.assertRaises(ValueError, self.s_s.count, "SpendAmount", condition=lambda x: x > 50, distinct=True)
+        self.assertEqual(len(set([d for d in data_amounts if d > 50])),
+                         self.s_s.count("SpendAmount", distinct=True, filter_key="SpendAmount",
+                                        condition=lambda x: x > 50))
+        self.assertEqual(2, self.s_s.count("SpendAmount", filter_key="CustomerId", condition=lambda x: x == 1))
+        self.assertEqual(1, self.s_s.count("SpendAmount", filter_key="CustomerId", condition=lambda x: x == 2))
 
-    def test_custom_operaion(self):
+    def test_custom_operation(self):
         pass
 
 
