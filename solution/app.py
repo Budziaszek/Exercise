@@ -6,11 +6,9 @@ def main():
     demo()
 
 
-def get_sample_data():
-    return [{"CustomerId": 1, "ItemId": 5, "SpendAmount": 100},
-            {"CustomerId": 2, "ItemId": 4, "SpendAmount": 150},
-            {"CustomerId": 3, "ItemId": 6, "SpendAmount": 50},
-            {"CustomerId": 1, "ItemId": 6, "SpendAmount": 10}, ]
+def get_sample_data(data=((1, 2, 3, 1), (5, 4, 6, 6), (100, 150, 50, 10)),
+                    keys=("CustomerId", "ItemId", "SpendAmount")):
+    return [{key: item for key, item in zip(keys, items)} for items in zip(*data)]
 
 
 def demo():
