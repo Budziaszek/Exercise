@@ -21,6 +21,14 @@ class TestSummaryStatistics(unittest.TestCase):
         self.assertEqual(sum(set([d for d in data_amounts if d > 50])),
                          self.s_s.sum("SpendAmount",  distinct=True, filter_key="SpendAmount",
                                       condition=lambda x: x > 50))
+        self.assertEqual(110, self.s_s.sum("SpendAmount", filter_key="CustomerId", condition=lambda x: x == 1))
+        self.assertEqual(150, self.s_s.sum("SpendAmount", filter_key="CustomerId", condition=lambda x: x == 2))
+
+    def test_count(self):
+        pass
+
+    def test_custom_operaion(self):
+        pass
 
 
 if __name__ == '__main__':
