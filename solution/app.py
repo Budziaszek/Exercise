@@ -24,7 +24,8 @@ def demo():
     customers_who_spend_once_over_50 = s_s.count("CustomerId", distinct=True, filter_key="SpendAmount",
                                                  condition=lambda x: x > 50)
     customers_who_spend_total_over_100 = s_s.count("CustomerId", distinct=True, filter_key="SpendAmount",
-                                                   group_by_key="CustomerId", condition=lambda x: x > 100)
+                                                   condition=lambda x: x > 100, group_by_key="CustomerId",
+                                                   reduce_function=sum)
 
     print("Number of rows (here number of transactions): {}".format(number_of_transactions))
     print("Number of customers: {}".format(number_of_customers))
