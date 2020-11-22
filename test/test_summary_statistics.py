@@ -25,6 +25,10 @@ class TestSummaryStatistics(unittest.TestCase):
                                       condition=lambda x: x > 50))
         self.assertEqual(110, self.s_s.sum("SpendAmount", filter_key="CustomerId", condition=lambda x: x == 1))
         self.assertEqual(150, self.s_s.sum("SpendAmount", filter_key="CustomerId", condition=lambda x: x == 2))
+        self.assertEqual(250, self.s_s.sum("SpendAmount", filter_key="CustomerId", condition=lambda x: x in (1, 2),
+                                           group_by_key="CustomerId", reduce_function=max))
+        self.assertEqual(260, self.s_s.sum("SpendAmount", distinct=True, filter_key="SpendAmount",
+                                           condition=lambda x: x > 100, group_by_key="CustomerId", reduce_function=sum))
 
     def test_count(self):
         data_customers, data_items, data_amounts = ((1, 2, 3, 1), (5, 4, 6, 6), (100, 150, 50, 10))
@@ -43,6 +47,11 @@ class TestSummaryStatistics(unittest.TestCase):
                                         condition=lambda x: x > 50))
         self.assertEqual(2, self.s_s.count("SpendAmount", filter_key="CustomerId", condition=lambda x: x == 1))
         self.assertEqual(1, self.s_s.count("SpendAmount", filter_key="CustomerId", condition=lambda x: x == 2))
+        self.assertEqual(2, self.s_s.count("SpendAmount", filter_key="CustomerId", condition=lambda x: x in (1, 2),
+                                           group_by_key="CustomerId", reduce_function=max))
+        self.assertEqual(2, self.s_s.count("SpendAmount", distinct=True, filter_key="SpendAmount",
+                                           condition=lambda x: x > 100, group_by_key="CustomerId",
+                                           reduce_function=sum))
 
     def test_custom_operation(self):
         data_customers, data_items, data_amounts = ((1, 2, 3, 1), (5, 4, 6, 6), (100, 150, 50, 10))
@@ -66,6 +75,12 @@ class TestSummaryStatistics(unittest.TestCase):
                                                        condition=lambda x: x == 1))
         self.assertEqual(150, self.s_s.custom_operation(mean, "SpendAmount", filter_key="CustomerId",
                                                         condition=lambda x: x == 2))
+        self.assertEqual(125, self.s_s.custom_operation(mean, "SpendAmount", filter_key="CustomerId",
+                                                        condition=lambda x: x in (1, 2),
+                                                        group_by_key="CustomerId", reduce_function=max))
+        self.assertEqual(130, self.s_s.custom_operation(mean, "SpendAmount", distinct=True, filter_key="SpendAmount",
+                                                        condition=lambda x: x > 100, group_by_key="CustomerId",
+                                                        reduce_function=sum))
 
 
 if __name__ == '__main__':
