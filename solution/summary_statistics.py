@@ -11,7 +11,7 @@ class SummaryStatistics:
     def __init__(self, data: SummaryStatisticsData = None):
         self.data = data
 
-    def _get_by_key(self, key, filter_key=None, condition=lambda x: True, data=None):
+    def _get_by_key(self, key, filter_key=None, condition=None, data=None):
         if data is None:
             data = self.data
         for item in data:
@@ -43,21 +43,26 @@ class SummaryStatistics:
         res = self._group(self.data, key)
         return self._reduce(res, reduce_function)
 
+    @staticmethod
+    def _check_filter(filter_key, condition):
+        if (filter_key is None) is not (condition is None):
+            raise ValueError("Filtering data requires both filter_key and condition!")
+
     def sum(self, key, distinct=False, filter_key=None, condition=None, group_by_key=None):
+        self._check_filter(filter_key, condition)
         data = self._group_by(group_by_key) if group_by_key else self.data
         if not distinct:
             return sum(self._get_by_key(key, filter_key, condition, data=data))
         return sum(set(self._get_by_key(key, filter_key, condition, data=data)))
 
     def count(self, key, distinct=False, filter_key=None, condition=None, group_by_key=None):
+        self._check_filter(filter_key, condition)
         data = self._group_by(group_by_key) if group_by_key else self.data
         res = self._get_by_key(key, filter_key, condition, data=data)
         return len(list(res) if not distinct else set(res))
 
     def custom_operation(self, fun, key, distinct=False, filter_key=None, condition=None, group_by_key=None):
+        self._check_filter(filter_key, condition)
         data = self._group_by(group_by_key) if group_by_key else self.data
         res = self._get_by_key(key, filter_key, condition, data=data)
         return fun(list(res) if not distinct else set(res))
-
-
-
